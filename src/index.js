@@ -55,20 +55,144 @@ async function getPokemon(url) {
 // //  console.log(pokemons.length);
 // //});
 
-// app.get('/angular', async (req, res) => {
-//   console.log(req.query);
-//   return res.send('OK');
-// });
+app.get('/heavy', async (req, res) => {
+  const limit = req.query.limit ? +req.query.limit : 20;
+  const offset = req.query.offset ? +req.query.offset : 0;
+  try {
+    const pokemonsUrl = `${baseUrl}/pokemon`;
+    const pokemonsInfo = await getPokemons(pokemonsUrl);
+    const pokemonPromises = pokemonsInfo.map((info) => {
+      return getPokemon(info.url);
+    });
+    const pokemonsFull = await Promise.all(pokemonPromises);
 
-// app.get('/huge', async (req, res) => {
-//   console.log(req.query);
-//   return res.send('OK');
-// });
+    const pokemons = pokemonsFull.map((pokemon) => {
+      return _.pick(pokemon, pokemonFields);
+    });
+    const sortPokemons = _.orderBy(pokemons, ['weight', 'name'], ['desc', 'asc']);
+    const slPokemons = sortPokemons.slice(offset, offset + limit);
+    const resPokemons = slPokemons.map((pokemon) => {
+      return _.pick(pokemon, pokemonFieldsFinish);
+    });
+    console.log('!!!!');
+    return res.json(resPokemons);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error });
+  }
+});
 
-// app.get('/micro', async (req, res) => {
-//   console.log(req.query);
-//   return res.send('OK');
-// });
+app.get('/light', async (req, res) => {
+  const limit = req.query.limit ? +req.query.limit : 20;
+  const offset = req.query.offset ? +req.query.offset : 0;
+  try {
+    const pokemonsUrl = `${baseUrl}/pokemon`;
+    const pokemonsInfo = await getPokemons(pokemonsUrl);
+    const pokemonPromises = pokemonsInfo.map((info) => {
+      return getPokemon(info.url);
+    });
+    const pokemonsFull = await Promise.all(pokemonPromises);
+
+    const pokemons = pokemonsFull.map((pokemon) => {
+      return _.pick(pokemon, pokemonFields);
+    });
+    const sortPokemons = _.orderBy(pokemons, ['weight', 'name'], ['asc', 'asc']);
+    const slPokemons = sortPokemons.slice(offset, offset + limit);
+    const resPokemons = slPokemons.map((pokemon) => {
+      return _.pick(pokemon, pokemonFieldsFinish);
+    });
+    console.log('!!!!');
+    return res.json(resPokemons);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error });
+  }
+});
+
+app.get('/angular', async (req, res) => {
+  const limit = req.query.limit ? +req.query.limit : 20;
+  const offset = req.query.offset ? +req.query.offset : 0;
+  try {
+    const pokemonsUrl = `${baseUrl}/pokemon`;
+    const pokemonsInfo = await getPokemons(pokemonsUrl);
+    const pokemonPromises = pokemonsInfo.map((info) => {
+      return getPokemon(info.url);
+    });
+    const pokemonsFull = await Promise.all(pokemonPromises);
+
+    const pokemons = pokemonsFull.map((pokemon) => {
+      return _.pick(pokemon, pokemonFields);
+    });
+    for (let i = 0; i < pokemons.length; i += 1) {
+      const element = pokemons[i];
+      element.angular = Number(element.weight) / Number(element.height);
+    }
+    const sortPokemons = _.orderBy(pokemons, ['angiular', 'name'],['asc', 'asc']);
+    const slPokemons = sortPokemons.slice(offset, offset + limit);
+    const resPokemons = slPokemons.map((pokemon) => {
+      return _.pick(pokemon, pokemonFieldsFinish);
+    });
+    console.log('!!!!');
+    return res.json(resPokemons);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error });
+  }
+});
+
+app.get('/huge', async (req, res) => {
+  const limit = req.query.limit ? +req.query.limit : 20;
+  const offset = req.query.offset ? +req.query.offset : 0;
+  try {
+    const pokemonsUrl = `${baseUrl}/pokemon`;
+    const pokemonsInfo = await getPokemons(pokemonsUrl);
+    const pokemonPromises = pokemonsInfo.map((info) => {
+      return getPokemon(info.url);
+    });
+    const pokemonsFull = await Promise.all(pokemonPromises);
+
+    const pokemons = pokemonsFull.map((pokemon) => {
+      return _.pick(pokemon, pokemonFields);
+    });
+    const sortPokemons = _.orderBy(pokemons, ['height', 'name'], ['desc', 'asc']);
+    const slPokemons = sortPokemons.slice(offset, offset + limit);
+    const resPokemons = slPokemons.map((pokemon) => {
+      return _.pick(pokemon, pokemonFieldsFinish);
+    });
+    console.log('!!!!');
+    return res.json(resPokemons);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error });
+  }
+});
+
+app.get('/micro', async (req, res) => {
+  const limit = req.query.limit ? +req.query.limit : 20;
+  const offset = req.query.offset ? +req.query.offset : 0;
+  try {
+    const pokemonsUrl = `${baseUrl}/pokemon`;
+    const pokemonsInfo = await getPokemons(pokemonsUrl);
+    const pokemonPromises = pokemonsInfo.map((info) => {
+      return getPokemon(info.url);
+    });
+    const pokemonsFull = await Promise.all(pokemonPromises);
+
+    const pokemons = pokemonsFull.map((pokemon) => {
+      return _.pick(pokemon, pokemonFields);
+    });
+    const sortPokemons = _.orderBy(pokemons, ['height', 'name'], ['asc', 'asc']);
+    const slPokemons = sortPokemons.slice(offset, offset + limit);
+    const resPokemons = slPokemons.map((pokemon) => {
+      return _.pick(pokemon, pokemonFieldsFinish);
+    });
+    console.log('!!!!');
+    return res.json(resPokemons);
+  } catch (error) {
+    console.log(error);
+    return res.json({ error });
+  }
+});
 
 app.get('/fat', async (req, res) => {
   const limit = req.query.limit ? +req.query.limit : 20;
@@ -84,8 +208,11 @@ app.get('/fat', async (req, res) => {
     const pokemons = pokemonsFull.map((pokemon) => {
       return _.pick(pokemon, pokemonFields);
     });
-    // const sortPokemons = _.sortBy(pokemons, pokemon => pokemon.name);
-    const sortPokemons = _.orderBy(pokemons, ['weight / height', 'name']);
+    for (let i = 0; i < pokemons.length; i += 1) {
+      const element = pokemons[i];
+      element.fat = Number(element.weight) / Number(element.height);
+    }
+    const sortPokemons = _.orderBy(pokemons, ['fat', 'name'], ['asc', 'asc']);
     const slPokemons = sortPokemons.slice(offset, offset + limit);
     const resPokemons = slPokemons.map((pokemon) => {
       return _.pick(pokemon, pokemonFieldsFinish);
@@ -98,10 +225,6 @@ app.get('/fat', async (req, res) => {
   }
 });
 
-// app.get('/heavy', async (req, res) => {
-//   console.log(req.query);
-//   return res.send('OK');
-// });
 
 app.get('/', async (req, res) => {
   const limit = req.query.limit ? +req.query.limit : 20;
