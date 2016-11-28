@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
+    "strict": "off"
+  },
+  "ecmaFeatures": {
+    "jsx": true
+  }
+}
